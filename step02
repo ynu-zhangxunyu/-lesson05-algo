@@ -1,0 +1,44 @@
+def binary_search(rates, target):
+    """二分查找：在有序利率表 rates 中查找 target，返回下标；未找到返回 -1
+
+    Args:
+        rates: 升序排列的利率列表
+        target: 要查找的目标利率
+    Returns:
+        找到则返回对应下标，否则返回 -1
+    """
+    low = 0                       # 左边界（首元素下标）
+    high = len(rates) - 1         # 右边界（末元素下标）
+
+    while low <= high:
+        mid = (low + high) // 2   # 取中间位置（整数除法）
+        # 由于利率是浮点数，用小容差判断是否相等，避免浮点误差
+        if abs(rates[mid] - target) < 1e-9:
+            return mid
+        elif rates[mid] < target:
+            low = mid + 1         # 目标在右半区，左边界右移
+        else:
+            high = mid - 1        # 目标在左半区，右边界左移
+
+    return -1                     # 循环结束仍未找到
+
+def main():
+    """在 1024 档模拟利率表中查找 3.75%"""
+
+    # 构造 1024 档升序利率表：0.00%, 0.01%, 0.02%, ..., 10.23%
+    # 用整数乘以步长再保留两位小数，避免浮点累积误差
+    rates = [round(i * 0.01, 2) for i in range(1024)]
+
+    target = 3.75                 # 目标利率 3.75%
+
+    index = binary_search(rates, target)
+
+    print("利率表档位：", len(rates))
+    print("目标利率：", target, "%")
+    if index != -1:
+        print("查找成功，目标位于第", index, "档，对应利率：", rates[index], "%")
+    else:
+        print("未找到目标利率", target, "%")
+
+if __name__ == "__main__":
+    main()
