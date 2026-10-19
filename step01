@@ -1,0 +1,45 @@
+def merge_sort(nums):
+    """合并排序（归并排序）——严格按"分解-解决-合并"三段结构实现"""
+
+    # 递归终止条件：当子序列长度小于等于 1 时，天然有序，无需再排
+    if len(nums) <= 1:
+        return nums
+
+    # ========== 一、分解（Divide）==========
+    # 找到中间位置，将数组拆成左右两个子序列
+    mid = len(nums) // 2
+    left = nums[:mid]
+    right = nums[mid:]
+
+    # ========== 二、解决（Conquer）==========
+    # 递归地对左右两个子序列分别进行合并排序
+    sorted_left = merge_sort(left)
+    sorted_right = merge_sort(right)
+
+    # ========== 三、合并（Merge）==========
+    # 将两个已有序的子序列合并成一个整体有序的序列
+    merged = []
+    i = j = 0  # 分别指向 sorted_left 和 sorted_right 的当前元素
+    while i < len(sorted_left) and j < len(sorted_right):
+        if sorted_left[i] <= sorted_right[j]:
+            merged.append(sorted_left[i])
+            i += 1
+        else:
+            merged.append(sorted_right[j])
+            j += 1
+    # 把剩余未比较完的元素追加到末尾（只会有一边有剩余）
+    merged.extend(sorted_left[i:])
+    merged.extend(sorted_right[j:])
+
+    return merged
+
+def main():
+    """主函数：对 [8,3,5,1,9,2] 进行合并排序并打印结果"""
+    nums = [8, 3, 5, 1, 9, 2]
+    print("原始数组：", nums)
+    result = merge_sort(nums)
+    print("排序结果：", result)
+
+if __name__ == "__main__":
+    main()
+    
